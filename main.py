@@ -23,7 +23,9 @@ black = (0, 0, 0)
 red = (255, 0, 0)
 
 # Player
-player_rect = pygame.Rect((screen_width - 50) / 2, screen_height - 50 - 10, 50, 50)
+player_img = pygame.image.load('assets/bee.png')
+player_img = pygame.transform.scale(player_img, (50, 50))
+player_rect = player_img.get_rect(center=(screen_width / 2, screen_height - 50))
 player_speed = 5
 
 # Bullet
@@ -32,7 +34,8 @@ bullet_speed = 10
 bullets = []
 
 # Enemy
-enemy_size = 50
+enemy_img = pygame.image.load('assets/honeycomb.png')
+enemy_img = pygame.transform.scale(enemy_img, (50, 50))
 enemy_speed = 3
 enemies = []
 enemy_spawn_rate = 30  # Lower is faster
@@ -69,9 +72,10 @@ while running:
         enemy_spawn_counter += 1
         if enemy_spawn_counter >= enemy_spawn_rate:
             enemy_spawn_counter = 0
-            enemy_x = random.randint(0, screen_width - enemy_size)
-            enemy_y = -enemy_size
-            enemies.append(pygame.Rect(enemy_x, enemy_y, enemy_size, enemy_size))
+            enemy_rect = enemy_img.get_rect()
+            enemy_rect.x = random.randint(0, screen_width - enemy_rect.width)
+            enemy_rect.y = -enemy_rect.height
+            enemies.append(enemy_rect)
 
         # Movement
         for bullet in bullets:
@@ -99,11 +103,11 @@ while running:
 
     # Drawing
     screen.fill(black)
-    pygame.draw.rect(screen, white, player_rect)
+    screen.blit(player_img, player_rect)
     for bullet in bullets:
         pygame.draw.rect(screen, white, bullet)
     for enemy in enemies:
-        pygame.draw.rect(screen, red, enemy)
+        screen.blit(enemy_img, enemy)
 
     # Score
     score_text = font.render(f"Score: {score}", True, white)
