@@ -42,9 +42,9 @@ bullets = []
 # Enemy
 enemy_img = pygame.image.load('assets/honeycomb.png')
 enemy_img = pygame.transform.scale(enemy_img, (50, 50))
-enemy_speed = 3
+enemy_speed = 2
 enemies = []
-enemy_spawn_rate = 30  # Lower is faster
+enemy_spawn_rate = 60  # Lower is faster
 enemy_spawn_counter = 0
 
 # Score
