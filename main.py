@@ -11,6 +11,12 @@ import random
 
 # Initialize Pygame
 pygame.init()
+mixer_initialized = False
+try:
+    pygame.mixer.init()
+    mixer_initialized = True
+except pygame.error:
+    print("No audio device found, sounds will be disabled.")
 
 # Screen dimensions
 screen_width = 800
@@ -45,6 +51,11 @@ enemy_spawn_counter = 0
 score = 0
 font = pygame.font.Font(None, 36)
 
+# Sound
+if mixer_initialized:
+    laser_sound = pygame.mixer.Sound('assets/laser-312360.mp3')
+    explosion_sound = pygame.mixer.Sound('assets/explosion-312361.mp3')
+
 # Game state
 game_over = False
 
@@ -59,6 +70,8 @@ while running:
                 bullet_x = player_rect.x + player_rect.width / 2 - bullet_size / 2
                 bullet_y = player_rect.y
                 bullets.append(pygame.Rect(bullet_x, bullet_y, bullet_size, bullet_size))
+                if mixer_initialized:
+                    laser_sound.play()
 
     if not game_over:
         # Player movement
@@ -95,11 +108,16 @@ while running:
                     bullets.remove(bullet)
                     enemies.remove(enemy)
                     score += 10
+                    if mixer_initialized:
+                        explosion_sound.play()
                     break
 
         for enemy in enemies:
             if player_rect.colliderect(enemy):
+                if mixer_initialized:
+                    explosion_sound.play()
                 game_over = True
+                break
 
     # Drawing
     screen.fill(black)
